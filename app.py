@@ -1,4 +1,3 @@
-# Updated Streamlit app using streamlit-audiorecorder instead of sounddevice
 import streamlit as st
 from audiorecorder import audiorecorder
 import speech_recognition as sr
@@ -7,6 +6,7 @@ import tempfile
 import os
 from deep_translator import GoogleTranslator
 from typing import Optional
+from io import BytesIO
 
 # Streamlit page config
 st.set_page_config(page_title="AI Voice Tone Converter", page_icon="🎤", layout="wide")
@@ -15,6 +15,7 @@ st.set_page_config(page_title="AI Voice Tone Converter", page_icon="🎤", layou
 for key in ['audio_data', 'transcribed_text', 'generated_responses', 'input_language']:
     if key not in st.session_state:
         st.session_state[key] = None if key != 'input_language' else 'ta'
+
 
 class SpeechProcessor:
     def __init__(self):
@@ -109,9 +110,14 @@ def main():
     audio = audiorecorder("🎤 Click to record", "⏹ Stop recording")
 
     if len(audio) > 0:
-        st.audio(audio.tobytes(), format="audio/wav")
+        buffer = BytesIO()
+        audio.export(buffer, format="wav")
+        audio_bytes = buffer.getvalue()
+
+        st.audio(audio_bytes, format="audio/wav")
+
         with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as f:
-            f.write(audio.tobytes())
+            f.write(audio_bytes)
             temp_path = f.name
 
         with st.spinner("Transcribing..."):
