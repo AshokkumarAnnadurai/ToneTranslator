@@ -1,7 +1,6 @@
 streamlit
-streamlit-audiorecorder
 audiorecorder
-pydub
 speechrecognition
-pyttsx3
+pydub
 deep-translator
+pyttsx3
