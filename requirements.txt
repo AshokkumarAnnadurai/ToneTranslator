@@ -1,9 +1,5 @@
 streamlit
 speechrecognition
-requests
 pydub
-numpy
-sounddevice
-scipy
 pyttsx3
 deep-translator
